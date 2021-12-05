@@ -9,7 +9,9 @@ import (
 )
 
 // "NewData": Variable for Data{}.
-var NewData = Data{}
+var NewData = &Data{}
+
+var test = &Graph{}
 
 // "FillingData": Reading data from txt file in order to fill the struct.
 func FillingData(str string) {
@@ -56,4 +58,32 @@ func ReadFile() {
 	if err := scanner.Err(); err != nil {
 		log.Fatal(err)
 	}
+}
+
+func DataForVetices() {
+	// for _, val := range NewData.Start {
+	// 	vertices := strings.Split(val, " ")
+	// 	vertice, _ := strconv.Atoi(vertices[0])
+	// 	x_coordinate,_ := strconv.Atoi(vertices[1])
+	// 	y_coordinate,_ := strconv.Atoi(vertices[2])
+	// 	test.AddVertex(vertice)
+	// 	test.
+	// }
+
+	for i := 0; i < len(NewData.Start)+1; i++ {
+		test.AddVertex(i)
+
+	}
+
+}
+
+func DataForLinks() {
+	for _, val := range NewData.Links {
+		links := strings.Split(val, "-")
+		from, _ := strconv.Atoi(links[0])
+		to, _ := strconv.Atoi(links[1])
+		test.AddEdge(from, to)
+		test.AddEdge(to, from)
+	}
+	test.Print()
 }

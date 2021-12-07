@@ -22,6 +22,7 @@ type Graph struct {
 // "Vertex":
 type Vertex struct {
 	key      int
+	visited  bool
 	adjacent []*Vertex
 }
 

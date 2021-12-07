@@ -2,6 +2,7 @@ package functions
 
 import (
 	"bufio"
+	"fmt"
 	"log"
 	"os"
 	"strconv"
@@ -86,4 +87,41 @@ func DataForLinks() {
 		test.AddEdge(to, from)
 	}
 	test.Print()
+
+	visitedOrder := []int{}
+
+	cb := func(i int) {
+		// fmt.Println("HERE")
+		visitedOrder = append(visitedOrder, i)
+	}
+	visited := map[int]bool{}
+	fmt.Println(test.vertices[1].key, test.vertices[1].adjacent[0].key)
+	visited = DFS(test, test.vertices[1], cb, visited)
+	fmt.Println(visited)
+	fmt.Println(visitedOrder)
+}
+
+func DFS(g *Graph, startVertex *Vertex, visitCb func(int), visited map[int]bool) map[int]bool {
+	// we maintain a map of visited nodes to prevent visiting the same
+	// node more than once
+
+	// visited := map[int]bool{}
+
+	fmt.Println(visited, startVertex.key)
+
+	if startVertex == nil {
+		return map[int]bool{}
+	}
+	visited[startVertex.key] = true
+	visitCb(startVertex.key)
+
+	// for each of the adjacent vertices, call the function recursively
+	// if it hasn't yet been visited
+	for _, v := range startVertex.adjacent {
+		if visited[v.key] {
+			continue
+		}
+		visited = DFS(g, v, visitCb, visited)
+	}
+	return visited
 }

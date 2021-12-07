@@ -10,7 +10,9 @@ func main() {
 	functions.ReadFile()
 	functions.DataForVetices()
 	functions.DataForLinks()
+	fmt.Println()
 	fmt.Println(functions.NewData)
+
 	// fmt.Print(functions.test)
 	// test := &functions.Graph{}
 	// for i := 0; i < 5; i++ {

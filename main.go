@@ -7,11 +7,10 @@ import (
 
 func main() {
 
-	functions.ReadFile()
-	functions.DataForVetices()
-	functions.DataForLinks()
+	functions.StartFunctions()
+	// functions.Path()
 	fmt.Println()
-	fmt.Println(functions.NewData)
+	// fmt.Println(functions.NewData)
 
 	// fmt.Print(functions.test)
 	// test := &functions.Graph{}

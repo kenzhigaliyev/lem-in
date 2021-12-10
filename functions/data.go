@@ -71,11 +71,12 @@ func DataForVetices() {
 	// 	test.
 	// }
 
-	for i := 0; i < len(NewData.Start)+1; i++ {
-		test.AddVertex(i)
-
+	for i := 0; i < len(NewData.Start); i++ {
+		j, _ := strconv.Atoi(strings.Split(NewData.Start[i], " ")[0])
+		test.AddVertex(j)
 	}
-
+	j, _ := strconv.Atoi(strings.Split(NewData.End, " ")[0])
+	test.AddVertex(j)
 }
 
 func DataForLinks() {
@@ -86,42 +87,69 @@ func DataForLinks() {
 		test.AddEdge(from, to)
 		test.AddEdge(to, from)
 	}
-	test.Print()
 
-	visitedOrder := []int{}
-
-	cb := func(i int) {
-		// fmt.Println("HERE")
-		visitedOrder = append(visitedOrder, i)
-	}
-	visited := map[int]bool{}
-	fmt.Println(test.vertices[1].key, test.vertices[1].adjacent[0].key)
-	visited = DFS(test, test.vertices[1], cb, visited)
-	fmt.Println(visited)
-	fmt.Println(visitedOrder)
 }
 
-func DFS(g *Graph, startVertex *Vertex, visitCb func(int), visited map[int]bool) map[int]bool {
-	// we maintain a map of visited nodes to prevent visiting the same
-	// node more than once
+// func DFS(g *Graph, startVertex *Vertex, visitCallBack func(int), visited map[int]bool) map[int]bool {
 
-	// visited := map[int]bool{}
+// 	fmt.Println(visited, startVertex.key)
+
+// 	if startVertex == nil {
+// 		return map[int]bool{}
+// 	}
+// 	visited[startVertex.key] = true
+// 	visitCallBack(startVertex.key)
+
+// 	for _, v := range startVertex.adjacent {
+// 		if visited[v.key] {
+// 			continue
+// 		}
+// 		visited = DFS(g, v, visitCallBack, visited)
+// 	}
+// 	return visited
+// }
+
+var visitedOrder = [][]int{}
+
+func CallBack(i []int) {
+	visitedOrder = append(visitedOrder, i)
+}
+
+func DFS(g *Graph, startVertex *Vertex, visitCallBack func([]int), visited map[int]bool, order []int) map[int]bool {
 
 	fmt.Println(visited, startVertex.key)
 
 	if startVertex == nil {
 		return map[int]bool{}
 	}
+	if startVertex.key == 0 {
+		visitCallBack(order)
+		return map[int]bool{}
+	}
 	visited[startVertex.key] = true
-	visitCb(startVertex.key)
+	order = append(order, startVertex.key)
 
-	// for each of the adjacent vertices, call the function recursively
-	// if it hasn't yet been visited
 	for _, v := range startVertex.adjacent {
 		if visited[v.key] {
 			continue
 		}
-		visited = DFS(g, v, visitCb, visited)
+		visited = DFS(g, v, visitCallBack, visited, order)
 	}
 	return visited
+}
+
+func StartFunctions() {
+	ReadFile()
+	DataForVetices()
+	DataForLinks()
+
+	test.Print()
+
+	visited := map[int]bool{}
+	order := []int{}
+	fmt.Println(test.vertices[1].key, test.vertices[0].adjacent[0].key)
+	visited = DFS(test, test.vertices[0], CallBack, visited, order)
+	fmt.Println(visited)
+	fmt.Println(visitedOrder)
+
 }

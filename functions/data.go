@@ -115,27 +115,33 @@ func CallBack(i []int) {
 	visitedOrder = append(visitedOrder, i)
 }
 
-func DFS(g *Graph, startVertex *Vertex, visitCallBack func([]int), visited map[int]bool, order []int) map[int]bool {
+func DFS(g *Graph, startVertex *Vertex, visitCallBack func([]int), CheckVisited map[int]bool, order []int) map[int]bool {
 
-	fmt.Println(visited, startVertex.key)
+	fmt.Println(CheckVisited, startVertex.key)
 
 	if startVertex == nil {
 		return map[int]bool{}
 	}
+
 	if startVertex.key == 0 {
 		visitCallBack(order)
-		return map[int]bool{}
+		fmt.Println("-------NEw PATH-------")
+		return CheckVisited
+		// return map[int]bool{}
 	}
-	visited[startVertex.key] = true
+
+	CheckVisited[startVertex.key] = true
+	fmt.Println("VISITED")
 	order = append(order, startVertex.key)
 
 	for _, v := range startVertex.adjacent {
-		if visited[v.key] {
+		if CheckVisited[v.key] {
 			continue
 		}
-		visited = DFS(g, v, visitCallBack, visited, order)
+		CheckVisited = DFS(g, v, visitCallBack, CheckVisited, order)
+		fmt.Println(CheckVisited, v.key, order)
 	}
-	return visited
+	return CheckVisited
 }
 
 func StartFunctions() {
@@ -145,11 +151,11 @@ func StartFunctions() {
 
 	test.Print()
 
-	visited := map[int]bool{}
+	CheckVisited := map[int]bool{}
 	order := []int{}
 	fmt.Println(test.vertices[1].key, test.vertices[0].adjacent[0].key)
-	visited = DFS(test, test.vertices[0], CallBack, visited, order)
-	fmt.Println(visited)
-	fmt.Println(visitedOrder)
+	CheckVisited = DFS(test, test.vertices[0], CallBack, CheckVisited, order)
+	fmt.Println(CheckVisited)
+	fmt.Println("Order:", visitedOrder)
 
 }

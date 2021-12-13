@@ -109,39 +109,78 @@ func DataForLinks() {
 // 	return visited
 // }
 
+// func DFS(g *Graph, startVertex *Vertex, visitCallBack func([]int), CheckVisited map[int]bool, order []int) map[int]bool {
+
+// 	fmt.Println(CheckVisited, startVertex.key)
+
+// 	if startVertex == nil {
+// 		return map[int]bool{}
+// 	}
+
+// 	if startVertex.key == 0 {
+// 		visitCallBack(order)
+// 		fmt.Println("-------NEw PATH-------")
+// 		return CheckVisited
+// 		// return map[int]bool{}
+// 	}
+
+// 	CheckVisited[startVertex.key] = true
+// 	fmt.Println("VISITED")
+// 	order = append(order, startVertex.key)
+
+// 	for _, v := range startVertex.adjacent {
+// 		if CheckVisited[v.key] {
+// 			continue
+// 		}
+// 		CheckVisited = DFS(g, v, visitCallBack, CheckVisited, order)
+// 		fmt.Println(CheckVisited, v.key, order)
+// 	}
+// 	return CheckVisited
+// }
+
+func ContainsVertice(vertice int, order []int) bool {
+	for _, val := range order {
+		if vertice == val {
+			return true
+		}
+	}
+	return false
+}
+
 var visitedOrder = [][]int{}
 
 func CallBack(i []int) {
 	visitedOrder = append(visitedOrder, i)
+	// fmt.Println(i)
+	// fmt.Println(visitedOrder)
 }
 
-func DFS(g *Graph, startVertex *Vertex, visitCallBack func([]int), CheckVisited map[int]bool, order []int) map[int]bool {
-
-	fmt.Println(CheckVisited, startVertex.key)
+func DFS(g *Graph, startVertex *Vertex, visitCallBack func([]int), order []int) {
+	fmt.Println(startVertex.key, order)
 
 	if startVertex == nil {
-		return map[int]bool{}
+		fmt.Println("NIL value!")
+		return
 	}
 
 	if startVertex.key == 0 {
+
+		// fmt.Print("NEW PATH!   ")
 		visitCallBack(order)
-		fmt.Println("-------NEw PATH-------")
-		return CheckVisited
-		// return map[int]bool{}
+
+		return
 	}
 
-	CheckVisited[startVertex.key] = true
-	fmt.Println("VISITED")
 	order = append(order, startVertex.key)
 
 	for _, v := range startVertex.adjacent {
-		if CheckVisited[v.key] {
+		if ContainsVertice(v.key, order) {
 			continue
 		}
-		CheckVisited = DFS(g, v, visitCallBack, CheckVisited, order)
-		fmt.Println(CheckVisited, v.key, order)
+		DFS(g, v, visitCallBack, order)
+		// fmt.Println(v.key, order)
 	}
-	return CheckVisited
+	return
 }
 
 func StartFunctions() {
@@ -154,8 +193,14 @@ func StartFunctions() {
 	CheckVisited := map[int]bool{}
 	order := []int{}
 	fmt.Println(test.vertices[1].key, test.vertices[0].adjacent[0].key)
-	CheckVisited = DFS(test, test.vertices[0], CallBack, CheckVisited, order)
+	// CheckVisited = DFS(test, test.vertices[0], CallBack, CheckVisited, order)
+	DFS(test, test.vertices[0], CallBack, order)
+
 	fmt.Println(CheckVisited)
-	fmt.Println("Order:", visitedOrder)
+	fmt.Println("Order:")
+	for index, val := range visitedOrder {
+		fmt.Print(index + 1)
+		fmt.Println(val)
+	}
 
 }

@@ -151,12 +151,26 @@ var visitedOrder = [][]int{}
 
 func CallBack(i []int) {
 	visitedOrder = append(visitedOrder, i)
-	// fmt.Println(i)
-	// fmt.Println(visitedOrder)
+}
+
+func RewriteSlice(i []int) []int {
+	neworder := []int{}
+	for _, val := range i {
+		neworder = append(neworder, val)
+	}
+	return neworder
+}
+
+func RewriteOrder(i []int) {
+	shortest = nil
+	for _, val := range i {
+		shortest = append(shortest, val)
+	}
 }
 
 func DFS(g *Graph, startVertex *Vertex, visitCallBack func([]int), order []int) {
 	fmt.Println(startVertex.key, order)
+	fmt.Println("Order:", visitedOrder)
 
 	if startVertex == nil {
 		fmt.Println("NIL value!")
@@ -164,13 +178,11 @@ func DFS(g *Graph, startVertex *Vertex, visitCallBack func([]int), order []int) 
 	}
 
 	if startVertex.key == 0 {
-
-		// fmt.Print("NEW PATH!   ")
-		visitCallBack(order)
-
+		order = append(order, startVertex.key)
+		neworder := RewriteSlice(order)
+		visitCallBack(neworder)
 		return
 	}
-
 	order = append(order, startVertex.key)
 
 	for _, v := range startVertex.adjacent {
@@ -178,9 +190,50 @@ func DFS(g *Graph, startVertex *Vertex, visitCallBack func([]int), order []int) 
 			continue
 		}
 		DFS(g, v, visitCallBack, order)
-		// fmt.Println(v.key, order)
 	}
 	return
+}
+
+func CheckForDuplicateRooms(paths [][]int, newpath []int) bool {
+	if len(paths) == 0 {
+		return true
+	}
+	for _, val := range paths {
+		for _, room := range val[1 : len(val)-1] {
+			for _, newroom := range newpath[1 : len(newpath)-1] {
+				if room == newroom {
+					return false
+				}
+			}
+		}
+	}
+	return true
+}
+
+var shortest = []int{}
+
+func SearchForValidPaths(orders [][]int, startVertex *Vertex) [][]int {
+	paths := [][]int{}
+	for i := 0; i < len(startVertex.adjacent); i++ {
+		for index, order := range orders {
+			if order[1] == startVertex.adjacent[i].key {
+				if CheckForDuplicateRooms(paths, order) {
+					fmt.Println(order[1], startVertex.adjacent[i].key, "--------")
+					if len(shortest) != 0 && (len(shortest) > len(orders[index])) {
+						RewriteOrder(order)
+					} else if len(shortest) == 0 {
+						RewriteOrder(order)
+					}
+				}
+			} else {
+				continue
+			}
+		}
+		paths = append(paths, shortest)
+		shortest = nil
+
+	}
+	return paths
 }
 
 func StartFunctions() {
@@ -195,6 +248,7 @@ func StartFunctions() {
 	fmt.Println(test.vertices[1].key, test.vertices[0].adjacent[0].key)
 	// CheckVisited = DFS(test, test.vertices[0], CallBack, CheckVisited, order)
 	DFS(test, test.vertices[0], CallBack, order)
+	result := SearchForValidPaths(visitedOrder, test.vertices[0])
 
 	fmt.Println(CheckVisited)
 	fmt.Println("Order:")
@@ -202,5 +256,7 @@ func StartFunctions() {
 		fmt.Print(index + 1)
 		fmt.Println(val)
 	}
+
+	fmt.Println(result)
 
 }

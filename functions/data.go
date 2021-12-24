@@ -42,7 +42,7 @@ func FillingData(str string) {
 
 // "ReadFile": Function for reading from txt file line by line.
 func ReadFile() {
-	file, err := os.Open("example1.txt")
+	file, err := os.Open("example03.txt")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -170,7 +170,7 @@ func RewriteOrder(i []int) {
 
 func DFS(g *Graph, startVertex *Vertex, visitCallBack func([]int), order []int) {
 	fmt.Println(startVertex.key, order)
-	fmt.Println("Order:", visitedOrder)
+	fmt.Println("Order:--", visitedOrder)
 
 	if startVertex == nil {
 		fmt.Println("NIL value!")
